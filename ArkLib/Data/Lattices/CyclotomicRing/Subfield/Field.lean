@@ -11,9 +11,9 @@ import Mathlib.Algebra.Polynomial.Reverse
 /-!
 # `R_q^H` is a Field Isomorphic to `F_{q^k}` (Hachi §3, Lemma 5)
 
-This is the one piece of Hachi [NOZ26, §3] not yet covered by the rest of `Subfield/`: upgrading
-the fixed subring `R_q^H` from "a `Subring` of cardinality `q^k`" (`card_fixedSubring_eq`) to "a
-field isomorphic to `F_{q^k}`".
+This file completes the Hachi [NOZ26, §3] Lemma 5 chain by upgrading the fixed subring `R_q^H`
+from "a `Subring` of cardinality `q^k`" (`card_fixedSubring_eq`) to "a field isomorphic to
+`F_{q^k}`".
 
 The route (blueprint `blueprint/src/lattices/hachi_subfield.tex`, Phases 4–5):
 
@@ -31,11 +31,9 @@ The route (blueprint `blueprint/src/lattices/hachi_subfield.tex`, Phases 4–5):
 
 ## Status
 
-The only remaining `sorry` is `no_selfReciprocal_factor` (the `−1 ∉ ⟨q⟩` root-orbit argument,
-blueprint Lemma 4.5); its docstring carries a self-contained proof plan and an inventory of the
-already-proven ingredients. It holds the entire number-theoretic content of the swap. Everything
-else — the reverse identity, factor existence, the core unit lemma, and the whole assembly
-(`conjFixedSubring_isField`, `fixedSubring_isField`, `fixedSubringEquivGaloisField`) — is proven.
+The full route is now formalized in this module: reverse identity, two-factor existence, the swap
+lemma, the core unit lemma, and the final field/isomorphism assembly
+(`conjFixedSubring_isField`, `fixedSubring_isField`, `fixedSubringEquivGaloisField`).
 
 ## References
 
@@ -148,10 +146,9 @@ theorem exists_irreducible_factorization (hq5 : q % 8 = 5) {α : ℕ} (hα : 1 �
 irreducible factors of `X^{2^α}+1`: if `X^{2^α}+1 = p₁ · p₂` with `p₁, p₂` irreducible, then
 `p₁.reverse` is associated to `p₂` (and hence not to `p₁`).
 
-**Status: `sorry` — open for contribution** (blueprint difficulty rating 8/10). This is the *only*
-remaining gap in the `R_q^H ≃+* F_{q^k}` chain (Hachi [NOZ26, §3], Lemma 5): everything downstream
-(`galoisAutₛ_fixed_isUnit`, `conjFixedSubring_isField`, `fixedSubring_isField`,
-`fixedSubringEquivGaloisField`) is fully proven conditional on this lemma.
+This is the number-theoretic crux of the `R_q^H ≃+* F_{q^k}` chain (Hachi [NOZ26, §3], Lemma 5),
+and it feeds directly into `galoisAutₛ_fixed_isUnit`, `conjFixedSubring_isField`,
+`fixedSubring_isField`, and `fixedSubringEquivGaloisField`.
 
 ## Mathematical content
 
@@ -279,7 +276,7 @@ theorem galoisAutₛ_fixed_isUnit (hq5 : q % 8 = 5) {α : ℕ} (hα : 1 ≤ α)
 `σ_{-1}`-fixed element is a unit: if `p₁ ∣ g` then the reverse identity plus the swap
 `p₁.reverse ~ p₂` force `p₂ ∣ g` too, so `X^{2^α}+1 ∣ g` and the element vanishes.
 
-Proven (modulo `no_selfReciprocal_factor`): transport to `S = Z_q[X]/(X^{2^α}+1)` via
+Proof idea: transport to `S = Z_q[X]/(X^{2^α}+1)` via
 `Rq.equivQuotient`, where `conjAut` becomes `galoisAutₛ` (`galoisAut_toQuotient`), and apply the
 core unit lemma `galoisAutₛ_fixed_isUnit`. The inverse of a `σ_{-1}`-fixed unit is again fixed
 (apply `σ_{-1}` to `a·a⁻¹ = 1` and cancel the unit). -/
@@ -341,7 +338,7 @@ theorem conjFixedSubring_isField (hq5 : q % 8 = 5) {α : ℕ} (hα : 1 ≤ α) :
 `R_q^H ⊆ R_q^{σ_{-1}}` (`fixedSubring_le_conjFixedSubring`) and the latter is a field
 (`conjFixedSubring_isField`), `R_q^H` is a finite integral domain, hence a field.
 
-Proven modulo `conjFixedSubring_isField`: the inclusion `R_q^H ↪ R_q^{σ_{-1}}` is an injective
+Proof idea: the inclusion `R_q^H ↪ R_q^{σ_{-1}}` is an injective
 ring hom into a field, so `R_q^H` is an integral domain (`Function.Injective.isDomain`); being
 finite (`fixedSubring.fintype`) it is therefore a field (`Finite.isField_of_domain`). -/
 theorem fixedSubring_isField (hq5 : q % 8 = 5) {α κ : ℕ} (hα : 1 ≤ α) :
@@ -373,7 +370,7 @@ the fixed subring is ring-isomorphic to `GaloisField q (2^κ)` (`= F_{q^{2^κ}}`
 `fixedSubring_isField` with `card_fixedSubring_eq` (`|R_q^H| = q^{2^κ}`) and the classification of
 finite fields by cardinality.
 
-Proven modulo `conjFixedSubring_isField` (via `fixedSubring_isField`): equip `R_q^H` with the
+Proof idea (via `fixedSubring_isField`): equip `R_q^H` with the
 field structure from `fixedSubring_isField`, compute both cardinalities as `q^{2^κ}`
 (`card_fixedSubring_eq` and `GaloisField.card`), and invoke the uniqueness of finite fields
 (`FiniteField.ringEquivOfCardEq`). -/

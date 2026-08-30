@@ -96,8 +96,6 @@ The Section 3 results:
 
 ## Open items (`sorry`)
 
-* `no_selfReciprocal_factor` (`Subfield/Field.lean`) — reversal swaps the two irreducible
-  factors of `X^d + 1`. Everything downstream of it in the Lemma 5 chain is proven.
 * `cInfNorm_psi_le` (`Subfield/NormBound.lean`) — Lemma 6; statement formalized, proof plan
   in its docstring.
 
